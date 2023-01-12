@@ -176,7 +176,6 @@ function main() {
 
 main()
 
-//
 // let url = location.href;
 // document.body.addEventListener('click', ()=>{
 //   requestAnimationFrame(()=>{
