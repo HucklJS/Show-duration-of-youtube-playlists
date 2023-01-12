@@ -131,9 +131,9 @@ function showDurationOfYoutubePlaylist() {
 
     // if not...
     const html = /*html*/`
-        <span class="chrome-extension_show-duration-youtube-playlists"> 
-          ${durationInfo}
-        </span>
+      <span class="chrome-extension_show-duration-youtube-playlists"> 
+        ${durationInfo}
+      </span>
     `
 
     $fieldForAppendInfo.insertAdjacentHTML(
