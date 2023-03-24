@@ -88,11 +88,21 @@ function showDurationOfYoutubePlaylist() {
     }
 
     const $fieldForAppendInfo = document.querySelector(
-      '#stats > '
-      + '.style-scope'
-      + '.ytd-playlist-sidebar-primary-info-renderer'
-      + ':first-child'
+      '#page-manager > ytd-browse > ytd-playlist-header-renderer > '
+      + 'div > div.immersive-header-content.ytd-playlist-header-renderer > '
+      + 'div.thumbnail-and-metadata-wrapper.ytd-playlist-header-renderer > '
+      + 'div > div.metadata-action-bar.ytd-playlist-header-renderer > '
+      + 'div.metadata-text-wrapper.ytd-playlist-header-renderer > '
+      + 'ytd-playlist-byline-renderer > div > yt-formatted-string:nth-child(2)'
     )
+
+    if ($fieldForAppendInfo == null) {
+      console.error(
+        'Can\'t find $fieldForAppendInfo, ',
+        'place where I\'d insert data'
+      )
+      return
+    }
 
     const $videoFieldsWithTime = document.querySelectorAll(
       '#contents.ytd-playlist-video-list-renderer > '
@@ -126,7 +136,8 @@ function showDurationOfYoutubePlaylist() {
 
     if ($durationInfoField) {
       $durationInfoField.textContent = durationInfo
-      return $fieldForAppendInfo.append($durationInfoField)
+      $fieldForAppendInfo.append($durationInfoField)
+      return
     }
 
     // if not...
@@ -150,42 +161,13 @@ function showDurationOfYoutubePlaylist() {
 }
 
 function main() {
-  let oldUrl = location.href
-  let timerId
+  document.body.addEventListener('yt-page-data-updated', () => {
+    setTimeout(showDurationOfYoutubePlaylist, 800)
+  })
+  // document.body.addEventListener('yt-navigate-finish', showDurationOfYoutubePlaylist)
 
-  const onUrlUpdate = () => {
-    const newUrl = location.href
-    if (oldUrl !== newUrl) {
-      clearTimeout(timerId)
-      timerId = setTimeout(showDurationOfYoutubePlaylist, 1800)
-      oldUrl = newUrl
-    }
-  }
-
-  // without this SPA doesn't update value...
-  const onAnyEventWatcher = () => {
-    requestAnimationFrame(onUrlUpdate)
-  }
-
-  document.body.addEventListener('click', onAnyEventWatcher, true);
-  window.addEventListener('popstate', onAnyEventWatcher, true);
-  // don't work with no trotling in network without setTimeout,
-  // fast 3g and slow 3g work...
-  setTimeout(showDurationOfYoutubePlaylist, 1800)
+  // not work on page updates
+  // document.body.addEventListener('yt-page-type-changed', showDurationOfYoutubePlaylist)
 }
 
 main()
-
-// let url = location.href;
-// document.body.addEventListener('click', ()=>{
-//   requestAnimationFrame(()=>{
-//     url!==location.href&&console.log(location.href);
-//     url = location.href;
-//   });
-// }, true);
-// window.addEventListener('popstate', ()=>{
-//   requestAnimationFrame(()=>{
-//     url!==location.href&&console.log(location.href);
-//     url = location.href;
-//   });
-// }, true);
